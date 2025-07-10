@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from '@/components/ui/dialog';
 import type { LostAndFoundItem } from '@/lib/types';
-import { PlusCircle } from 'lucide-react';
+import { PlusCircle, Search } from 'lucide-react';
 
 const initialItems: LostAndFoundItem[] = [
   { id: '1', type: 'lost', title: 'Golden Retriever "Buddy"', description: 'Lost near Central Park. He is very friendly and has a blue collar. Reward offered.', imageUrl: 'https://placehold.co/600x400.png', contact: 'jane.doe@email.com', date: '2024-07-20', imageHint: 'dog retriever'},
@@ -49,7 +49,7 @@ export function LostAndFound() {
             className="pl-10"
           />
           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <Search className="w-5 h-5" />
           </span>
         </div>
         <div className="flex gap-4 w-full sm:w-auto">
