@@ -6,7 +6,7 @@ import { PostItemForm } from './post-item-form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from '@/components/ui/dialog';
 import type { LostAndFoundItem } from '@/lib/types';
 import { PlusCircle } from 'lucide-react';
 
@@ -34,16 +34,8 @@ export function LostAndFound() {
   const lostItems = filteredItems.filter(item => item.type === 'lost');
   const foundItems = filteredItems.filter(item => item.type === 'found');
 
-  const handlePostItem = (newItem: Omit<LostAndFoundItem, 'id' | 'date' | 'imageUrl' | 'imageHint'>, type: 'lost' | 'found') => {
-    const fullItem: LostAndFoundItem = {
-      ...newItem,
-      id: crypto.randomUUID(),
-      type,
-      date: new Date().toISOString().split('T')[0],
-      imageUrl: 'https://placehold.co/600x400.png',
-      imageHint: `${type} item`,
-    };
-    setItems(prevItems => [fullItem, ...prevItems]);
+  const handlePostItem = (newItem: LostAndFoundItem) => {
+    setItems(prevItems => [newItem, ...prevItems]);
   };
 
   return (
@@ -70,6 +62,7 @@ export function LostAndFound() {
             <DialogContent>
               <DialogHeader>
                 <DialogTitle className="font-headline">Post a Lost Item</DialogTitle>
+                <DialogDescription>Provide details and an image of the item you've lost.</DialogDescription>
               </DialogHeader>
               <PostItemForm type="lost" setOpen={setLostFormOpen} onPostItem={handlePostItem} />
             </DialogContent>
@@ -83,6 +76,7 @@ export function LostAndFound() {
             <DialogContent>
               <DialogHeader>
                 <DialogTitle className="font-headline">Post a Found Item</DialogTitle>
+                 <DialogDescription>Provide details of the item you've found. You can add a photo if you wish.</DialogDescription>
               </DialogHeader>
               <PostItemForm type="found" setOpen={setFoundFormOpen} onPostItem={handlePostItem} />
             </DialogContent>

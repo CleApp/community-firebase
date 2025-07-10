@@ -1,8 +1,9 @@
 'use server';
 
 import { prioritizeReport } from '@/ai/flows/prioritize-reports';
-import type { CommunityReport } from '@/lib/types';
-import { ReportSchema } from '@/lib/schemas';
+import { generateImageHint } from '@/ai/flows/generate-image-hint-flow';
+import type { CommunityReport, LostAndFoundItem } from '@/lib/types';
+import { ReportSchema, PostItemSchema } from '@/lib/schemas';
 
 export async function submitDisturbanceReport(
   prevState: any,
@@ -41,4 +42,56 @@ export async function submitDisturbanceReport(
     console.error('AI prioritization failed:', error);
     return { message: 'Failed to prioritize report. Please try again later.' };
   }
+}
+
+export async function submitLostAndFoundItem(
+  prevState: any,
+  formData: FormData
+): Promise<{ message: string; item?: LostAndFoundItem; errors?: any }> {
+  const rawData = {
+    title: formData.get('title'),
+    description: formData.get('description'),
+    contact: formData.get('contact'),
+    image: formData.get('image'),
+  };
+
+  const validatedFields = PostItemSchema.safeParse(rawData);
+  if (!validatedFields.success) {
+    return {
+      message: 'Invalid item data.',
+      errors: validatedFields.error.flatten().fieldErrors,
+    };
+  }
+
+  const { image, ...itemData } = validatedFields.data;
+  const itemType = formData.get('type') as 'lost' | 'found';
+
+  let imageUrl = 'https://placehold.co/600x400.png';
+  let imageHint = `${itemType} item`;
+
+  if (image && image.size > 0) {
+    const arrayBuffer = await image.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    const photoDataUri = `data:${image.type};base64,${buffer.toString('base64')}`;
+    imageUrl = photoDataUri;
+
+    try {
+      const hintResponse = await generateImageHint({ photoDataUri });
+      imageHint = hintResponse.imageHint;
+    } catch(e) {
+      console.error("Failed to generate image hint", e);
+      // Fallback to default hint
+    }
+  }
+
+  const newItem: LostAndFoundItem = {
+    id: crypto.randomUUID(),
+    ...itemData,
+    type: itemType,
+    date: new Date().toISOString().split('T')[0],
+    imageUrl,
+    imageHint,
+  };
+
+  return { message: 'Item posted successfully.', item: newItem };
 }
