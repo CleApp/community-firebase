@@ -27,7 +27,8 @@ export function LostAndFound() {
     if (!searchTerm) return items;
     return items.filter(item =>
       item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.description.toLowerCase().includes(searchTerm.toLowerCase())
+      item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.imageHint.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [items, searchTerm]);
 

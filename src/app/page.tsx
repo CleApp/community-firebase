@@ -3,7 +3,7 @@ import { LostAndFound } from "@/components/lost-and-found";
 import { CommunityReports } from "@/components/community-reports";
 import { ResourceDirectory } from "@/components/resource-directory";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Gem, HandHeart, Search, ShieldAlert } from "lucide-react";
+import { HandHeart, Search, ShieldAlert } from "lucide-react";
 
 export default function Home() {
   return (
